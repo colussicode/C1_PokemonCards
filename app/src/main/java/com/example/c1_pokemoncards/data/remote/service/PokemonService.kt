@@ -6,5 +6,5 @@ import retrofit2.http.GET
 
 interface PokemonService {
     @GET("cards")
-    fun getData(): Call<List<PokemonResult>>
+    fun getData(): Call<PokemonResult>
 }
