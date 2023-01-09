@@ -44,5 +44,14 @@ class MainActivity : AppCompatActivity() {
                 println("nada de pokemons por aqui")
             }
         }
+
+        homeViewModel.uiState.observe(this) { UiState ->
+            when(UiState) {
+                is  UiState.Resume -> {/*TODO*/}
+                is  UiState.Loading -> {/*TODO*/}
+                is UiState.Loading -> {/*TODO*/}
+                else -> println("Não pegou nenhum estado, negão")
+            }
+        }
     }
 }
