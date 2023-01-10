@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
                 is UiState.Resume -> pokemonRecyclerView.adapter = PokemonListAdapter(uiState.pokemonList)
                 is UiState.Error -> uiState.error
                 is UiState.Loading -> showLoading(uiState.isLoading)
-                else -> println("Erro")
             }
         }
     }
