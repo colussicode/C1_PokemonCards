@@ -12,6 +12,10 @@ class HomeViewModel(
     private val _uiState = MutableLiveData<UiState>(UiState.Loading(true))
     val uiState: LiveData<UiState> = _uiState
 
+    init {
+        getPokemonList()
+    }
+
     private fun getPokemonList() {
         viewModelScope.launch {
             try {
@@ -23,10 +27,6 @@ class HomeViewModel(
                 _uiState.value = UiState.Loading(false)
             }
         }
-    }
-
-    init {
-        getPokemonList()
     }
 }
 
