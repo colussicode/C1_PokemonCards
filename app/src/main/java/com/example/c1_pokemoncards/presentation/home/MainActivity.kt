@@ -2,6 +2,8 @@ package com.example.c1_pokemoncards.presentation.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.c1_pokemoncards.R
@@ -17,10 +19,12 @@ class MainActivity : AppCompatActivity() {
     private val service: PokemonService = RetrofitService.getInstance().create(PokemonService::class.java)
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var pokemonRecyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        progressBar = findViewById(R.id.progress_bar)
         homeViewModel = ViewModelProvider(this, HomeViewModelFactory(service))[HomeViewModel::class.java]
         initWidgets()
         setObservables()
@@ -36,9 +40,17 @@ class MainActivity : AppCompatActivity() {
             when(uiState) {
                 is UiState.Resume -> pokemonRecyclerView.adapter = PokemonListAdapter(uiState.pokemonList)
                 is UiState.Error -> uiState.error
+                is UiState.Loading -> showLoading(uiState.isLoading)
                 else -> println("Erro")
             }
         }
     }
 
+    private fun showLoading(isLoading: Boolean) {
+        if(isLoading) {
+            progressBar.visibility = View.VISIBLE
+        } else {
+            progressBar.visibility = View.GONE
+        }
+    }
 }
