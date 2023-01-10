@@ -38,20 +38,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setObservables() {
-        homeViewModel.uiState.observe(this) { UiState ->
-            when(UiState) {
-                is  UiState.Resume -> {
-                    homeViewModel.pokemonList.observe(this) { pokemonList ->
-                        if(pokemonList !== null) {
-                            pokemonRecyclerView.adapter = PokemonListAdapter(pokemonList)
-                        } else {
-                            println("nada de pokemons por aqui")
-                        }
-                    }
-                }
-                is  UiState.Loading -> {/*TODO*/}
-                is UiState.Error -> {/*TODO*/}
-                else -> println("Não pegou nenhum estado, negão")
+        homeViewModel.uiState.observe(this) { uiState ->
+            when(uiState) {
+                is UiState.Resume -> pokemonRecyclerView.adapter = PokemonListAdapter(uiState.pokemonList)
+                else -> println("Erro")
             }
         }
     }
