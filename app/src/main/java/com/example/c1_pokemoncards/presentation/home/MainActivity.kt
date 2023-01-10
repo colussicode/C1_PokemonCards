@@ -33,25 +33,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getData() {
-        homeViewModel.getPokemonList()
+        val data = homeViewModel.getPokemonList()
+        println(data)
     }
 
     private fun setObservables() {
-        homeViewModel.pokemonList.observe(this) { pokemonList ->
-            if(pokemonList !== null) {
-                pokemonRecyclerView.adapter = PokemonListAdapter(pokemonList)
-            } else {
-                println("nada de pokemons por aqui")
-            }
-        }
-
         homeViewModel.uiState.observe(this) { UiState ->
             when(UiState) {
-                is  UiState.Resume -> {/*TODO*/}
+                is  UiState.Resume -> {
+                    homeViewModel.pokemonList.observe(this) { pokemonList ->
+                        if(pokemonList !== null) {
+                            pokemonRecyclerView.adapter = PokemonListAdapter(pokemonList)
+                        } else {
+                            println("nada de pokemons por aqui")
+                        }
+                    }
+                }
                 is  UiState.Loading -> {/*TODO*/}
-                is UiState.Loading -> {/*TODO*/}
+                is UiState.Error -> {/*TODO*/}
                 else -> println("Não pegou nenhum estado, negão")
             }
         }
     }
+
 }

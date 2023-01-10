@@ -20,6 +20,7 @@ class HomeViewModel(
         viewModelScope.launch {
             _uiState.value = UiState.Loading(isLoading = true)
             try {
+                _uiState.value = UiState.Resume
                 val data = service.getData()
                 _pokemonList.value = data.cards
             } catch (e: Throwable) {
