@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         homeViewModel = ViewModelProvider(this, HomeViewModelFactory(service))[HomeViewModel::class.java]
         initWidgets()
-        getData()
         setObservables()
 
     }
@@ -32,15 +31,11 @@ class MainActivity : AppCompatActivity() {
         pokemonRecyclerView = findViewById(R.id.rv_pokemon)
     }
 
-    private fun getData() {
-        val data = homeViewModel.getPokemonList()
-        println(data)
-    }
-
     private fun setObservables() {
         homeViewModel.uiState.observe(this) { uiState ->
             when(uiState) {
                 is UiState.Resume -> pokemonRecyclerView.adapter = PokemonListAdapter(uiState.pokemonList)
+                is UiState.Error -> uiState.error
                 else -> println("Erro")
             }
         }

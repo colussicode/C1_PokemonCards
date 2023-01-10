@@ -12,16 +12,20 @@ class HomeViewModel(
     private val _uiState = MutableLiveData<UiState>(UiState.Loading)
     val uiState: LiveData<UiState> = _uiState
 
-    fun getPokemonList() {
+    private fun getPokemonList() {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             try {
                 val data = service.getData()
                 _uiState.value = UiState.Resume(data.cards)
             } catch (e: Throwable) {
-                _uiState.value = UiState.Error(e)
+                _uiState.value = UiState.Error(e.message!!)
             }
         }
+    }
+
+    init {
+        getPokemonList()
     }
 }
 
@@ -31,6 +35,6 @@ class HomeViewModelFactory(private val service: PokemonService) : ViewModelProvi
 
 sealed class UiState {
     data class Resume(val pokemonList: List<Pokemon>): UiState()
-    data class Error(val error: Throwable): UiState()
+    data class Error(val error: String): UiState()
     object Loading: UiState()
 }
