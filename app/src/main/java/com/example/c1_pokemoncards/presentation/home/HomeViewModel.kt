@@ -17,9 +17,10 @@ class HomeViewModel(
             try {
                 val data = service.getData()
                 _uiState.value = UiState.Resume(data.cards)
-                _uiState.value = UiState.Loading(false)
             } catch (e: Throwable) {
                 _uiState.value = UiState.Error(e.message!!)
+            } finally {
+                _uiState.value = UiState.Loading(false)
             }
         }
     }
