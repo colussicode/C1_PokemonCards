@@ -36,6 +36,7 @@ class HomeViewModel(
     }
 
     private fun getPokemonsFromDb() {
+        _uiState.value = UiState.Loading(true)
         viewModelScope.launch {
             try {
                 val data = pokemonDao.getAll()
