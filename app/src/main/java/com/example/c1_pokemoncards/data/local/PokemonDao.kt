@@ -8,8 +8,11 @@ import com.example.c1_pokemoncards.data.models.Pokemon
 @Dao
 interface PokemonDao {
     @Insert
-    fun insertAll(pokemonList: List<PokemonEntity>)
+    suspend fun insertAll(pokemonList: List<PokemonEntity>)
 
     @Query("SELECT * FROM pokemons")
     suspend fun getAll() : List<PokemonEntity>
+
+    @Query("DELETE FROM pokemons")
+    suspend fun deleteAll()
 }

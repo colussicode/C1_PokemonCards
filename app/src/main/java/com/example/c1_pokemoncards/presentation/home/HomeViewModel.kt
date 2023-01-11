@@ -12,32 +12,34 @@ class HomeViewModel(
     private val pokemonDao: PokemonDao
 ) : ViewModel(){
 
-    private val _uiState = MutableLiveData<UiState>(UiState.Loading(true))
+    private val _uiState = MutableLiveData<UiState>(UiState.Loading(false))
     val uiState: LiveData<UiState> = _uiState
 
     init {
-        getPokemonList()
-        getPokemonsFromDb()
+        viewModelScope.launch {
+            getPokemonList()
+            getPokemonsFromDb()
+        }
     }
 
-    private fun getPokemonList() {
-        viewModelScope.launch {
+    private suspend fun getPokemonList() {
+        _uiState.value = UiState.Loading(true)
             try {
                 val data = service.getData()
                 insertPokemonsToDb(data.cards)
             } catch (e: Throwable) {
                 e.message
+            } finally {
+                _uiState.value = UiState.Loading(false)
             }
-        }
     }
 
-    private fun insertPokemonsToDb(pokemonList: List<PokemonEntity>) {
-        pokemonDao.insertAll(pokemonList)
+    private suspend fun insertPokemonsToDb(pokemonList: List<PokemonEntity>) {
+            pokemonDao.deleteAll()
+            pokemonDao.insertAll(pokemonList)
     }
 
-    private fun getPokemonsFromDb() {
-        _uiState.value = UiState.Loading(true)
-        viewModelScope.launch {
+    private suspend fun getPokemonsFromDb() {
             try {
                 val data = pokemonDao.getAll()
                 _uiState.value = UiState.Resume(data)
@@ -46,7 +48,6 @@ class HomeViewModel(
             } finally {
                 _uiState.value = UiState.Loading(false)
             }
-        }
     }
 }
 
