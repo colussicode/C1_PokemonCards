@@ -8,6 +8,8 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.c1_pokemoncards.R
+import com.example.c1_pokemoncards.data.local.PokemonDao
+import com.example.c1_pokemoncards.data.local.PokemonDatabase
 import com.example.c1_pokemoncards.data.models.Pokemon
 import com.example.c1_pokemoncards.data.models.PokemonResult
 import com.example.c1_pokemoncards.data.remote.RetrofitService
@@ -21,12 +23,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var pokemonRecyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
+    private lateinit var pokemondb: PokemonDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         progressBar = findViewById(R.id.progress_bar)
-        homeViewModel = ViewModelProvider(this, HomeViewModelFactory(service))[HomeViewModel::class.java]
+        pokemondb = PokemonDatabase.getInstance(baseContext).pokemonDao()
+        homeViewModel = ViewModelProvider(this, HomeViewModelFactory(service, pokemondb))[HomeViewModel::class.java]
         initWidgets()
         setObservables()
 

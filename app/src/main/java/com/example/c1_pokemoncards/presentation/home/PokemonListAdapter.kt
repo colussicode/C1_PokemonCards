@@ -7,11 +7,12 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.c1_pokemoncards.R
+import com.example.c1_pokemoncards.data.local.PokemonEntity
 import com.example.c1_pokemoncards.data.models.Pokemon
 
 class PokemonListAdapter(
 
-    private val dataset: List<Pokemon>
+    private val dataset: List<PokemonEntity>
 
 ) : RecyclerView.Adapter<PokemonListAdapter.PokemonViewHolder>(){
 
