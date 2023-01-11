@@ -32,9 +32,7 @@ class HomeViewModel(
     }
 
     private fun insertPokemonsToDb(pokemonList: List<PokemonEntity>) {
-        viewModelScope.launch {
             pokemonDao.insertAll(pokemonList)
-        }
     }
 
     private fun getPokemonsFromDb() {

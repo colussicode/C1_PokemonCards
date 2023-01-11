@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         homeViewModel = ViewModelProvider(this, HomeViewModelFactory(service, pokemondb))[HomeViewModel::class.java]
         initWidgets()
         setObservables()
-
     }
 
     private fun initWidgets() {
