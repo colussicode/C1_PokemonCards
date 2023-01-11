@@ -48,7 +48,7 @@ class HomeViewModel(
             } finally {
                 _uiState.value = UiState.Loading(false)
             }
-    }
+        }
 }
 
 class HomeViewModelFactory(private val service: PokemonService, private val pokemonDao: PokemonDao) : ViewModelProvider.NewInstanceFactory() {
