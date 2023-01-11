@@ -16,39 +16,41 @@ class HomeViewModel(
     val uiState: LiveData<UiState> = _uiState
 
     init {
-        viewModelScope.launch {
-            getPokemonList()
-            getPokemonsFromDb()
-        }
+        getPokemonList()
+        getPokemonsFromDb()
     }
 
-    private suspend fun getPokemonList() {
-        _uiState.value = UiState.Loading(true)
+    private fun getPokemonList() {
+        viewModelScope.launch {
+            _uiState.value = UiState.Loading(true)
             try {
                 val data = service.getData()
                 insertPokemonsToDb(data.cards)
-            } catch (e: Throwable) {
-                e.message
-            } finally {
-                _uiState.value = UiState.Loading(false)
-            }
-    }
-
-    private suspend fun insertPokemonsToDb(pokemonList: List<PokemonEntity>) {
-            pokemonDao.deleteAll()
-            pokemonDao.insertAll(pokemonList)
-    }
-
-    private suspend fun getPokemonsFromDb() {
-            try {
-                val data = pokemonDao.getAll()
-                _uiState.value = UiState.Resume(data)
-            } catch (e: Throwable) {
+            } catch (e: Exception) {
                 _uiState.value = UiState.Error(e.message!!)
             } finally {
                 _uiState.value = UiState.Loading(false)
             }
         }
+    }
+
+    private fun insertPokemonsToDb(pokemonList: List<PokemonEntity>) {
+        viewModelScope.launch {
+            pokemonDao.deleteAll()
+            pokemonDao.insertAll(pokemonList)
+        }
+    }
+
+    private fun getPokemonsFromDb() {
+        viewModelScope.launch {
+            try {
+                val data = pokemonDao.getAll()
+                _uiState.postValue(UiState.Resume(data))
+            } catch (e: Exception) {
+                _uiState.value = UiState.Error(e.message!!)
+            }
+        }
+    }
 }
 
 class HomeViewModelFactory(private val service: PokemonService, private val pokemonDao: PokemonDao) : ViewModelProvider.NewInstanceFactory() {
